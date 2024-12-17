@@ -1,0 +1,17 @@
+{
+  "name": "amikom-presence-temp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx tailwindcss -i ./resources/css/main.css -o ./public/css/main.css --watch",
+    "build": "npx tailwindcss -i ./resources/css/main.css -o ./public/css/main.css ",
+    "build:minify": "npx tailwindcss -i ./resources/css/main.css -o ./public/css/main.css --minify",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "husky": "^8.0.3",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5"
+  }
+}

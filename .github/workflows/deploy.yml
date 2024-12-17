@@ -1,0 +1,64 @@
+name: 🚀 Deploy website on push
+on: 
+  push:
+    branches:
+      - main
+      - master
+      - 'releases/**'
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+
+    - name: 🏁 Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: intl-70.1
+        tools: composer
+
+    - name: 🏁 Setup NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+
+    - name: 🚩 Install Node Dependencies
+      run: |
+        npm install --global yarn
+        yarn install
+
+    - name: 🚩 Install PHP Dependencies
+      run: composer install --no-dev
+
+    - name: 🔨 Minify Build Tailwind CSS
+      run: yarn build:minify
+
+    - name: 📂 Sync Deploy files
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        security: strict
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password:  ${{ secrets.FTP_PASSWORD }}
+        port: ${{ secrets.FTP_PORT }}
+        server-dir:  ${{ secrets.FTP_BASE_DIR }}
+        exclude: |
+          LICENSE
+          .htaccess
+          .env
+          env
+          .git*
+          .git*/**
+          .husky/**
+          .github/**
+          tests/**
+          node_modules/**
+          writable/cache/**
+          writable/debugbar/**
+          writable/logs/**
+          writable/session/**
+          writable/uploads/**
